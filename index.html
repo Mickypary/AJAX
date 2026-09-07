@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX</title>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>AJAX is going to change this text</h1>
+      <button id="actionButton" onclick="loadMessage()">Get content</button>
+      <div id="content"></div>
+    </div>
+
+    <script>
+      function loadMessage() {
+        let button = document.getElementById("actionButton");
+        let content = document.getElementById("content");
+
+        if (button.textContent === "Get content") {
+          let xhr = new XMLHttpRequest();
+          xhr.open("GET", "message.txt", true);
+          xhr.onload = function () {
+            content.innerHTML = this.responseText;
+            button.textContent = "Clear";
+          };
+          xhr.send();
+        } else {
+          content.innerHTML = "";
+          button.textContent = "Get content";
+        }
+      }
+    </script>
+  </body>
+</html>
