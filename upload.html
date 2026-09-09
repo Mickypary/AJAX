@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" name="" id="" />
+
+    <script>
+      let fileUploadButton = document.getElementsByTagName("input")[0];
+      fileUploadButton.addEventListener("change", upload);
+
+      function upload(e) {
+        // FileAPI given to use by the browser to access file selected by the user
+        let fileSelected = this.files[0];
+        // console.log(fileSelected);
+        let xhr = new XMLHttpRequest();
+        // console.log(xhr);
+        xhr.upload.onprogress = (e) => {
+          console.log(`Uploaded ${e.loaded} of ${e.total}`);
+        };
+
+        xhr.onloadend = () => {
+          if (xhr.status === 200) {
+            document.write("Successful upload");
+          } else {
+            console.log("error " + this.status);
+          }
+        };
+
+        xhr.open("POST", "fakeURL");
+
+        xhr.send(fileSelected);
+      }
+    </script>
+  </body>
+</html>

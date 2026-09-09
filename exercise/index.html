@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      textarea {
+        margin-top: 1em;
+        width: 500px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <button id="success">Click to start XHR (success)</button>
+      <button id="error">Click to start XHR (error)</button>
+      <button id="abort">Click to start XHR (abort)</button>
+    </div>
+    <!-- output -->
+    <textarea class="log" readonly></textarea>
+
+    <script>
+      const btnSuccess = document.getElementById("success");
+      const btnError = document.getElementById("error");
+      const btnAbort = document.getElementById("abort");
+
+      const log = document.querySelector(".log");
+
+      function addListeners(xhr) {
+        // loadstart fires when a request has started to load data
+        xhr.addEventListener("loadstart", handleEvent);
+
+        // load event fires when an XMLHttpRequest transaction complete successfully
+        xhr.addEventListener("load", handleEvent);
+
+        // loadend fires when a requesst has completed, successfuly (after load) or unsuccessfully (after an abort or error)
+        xhr.addEventListener("loadend", handleEvent);
+
+        // progress fires periodically when a request receives more data back from the server
+        xhr.addEventListener("progress", handleEvent);
+
+        // error is fired when the request encounters a network error
+        xhr.addEventListener("error", handleEvent);
+
+        // abort fires when a request has been aborted
+        xhr.addEventListener("abort", handleEvent);
+      }
+
+      function handleEvent(e) {
+        console.log(e);
+        log.textContent += `${e.type}: ${e.loaded} bytes transferred\n`;
+        // btnSuccess.addEventListener("click", function (e) {
+        // });
+      }
+
+      btnSuccess.addEventListener("click", () => {
+        runXHR("http://openlibrary.org/search.json?q=the+lord+of+the+rings");
+      });
+
+      btnError.addEventListener("click", () => {
+        runXHR("http://i-am-fake-url");
+      });
+
+      btnAbort.addEventListener("click", () => {
+        runXHR(
+          "http://openlibrary.org/search.json?q=the+lord+of+the+rings",
+        ).abort();
+      });
+
+      function runXHR(url) {
+        log.textContent = "";
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        addListeners(xhr);
+        xhr.send();
+
+        return xhr;
+      }
+    </script>
+  </body>
+</html>

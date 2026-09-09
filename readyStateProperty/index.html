@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button>Click me</button>
+
+    <script>
+      let button = document.getElementsByTagName("button")[0];
+      button.addEventListener("click", () => {
+        // step 1
+        const xhr = new XMLHttpRequest();
+        console.log(xhr);
+        // console.log("UNSENT", xhr.readyState);
+        // Step 2
+        let url = "message.txt";
+        let method = "GET";
+        xhr.open(method, url);
+        // console.log("OPENED", xhr.readyState);
+
+        xhr.responseType = ""; // text, json, blog, document
+
+        // Step 3: listen for events
+
+        // ***example 1: download progress
+        xhr.onprogress = (e) => {
+          // console.log(e);
+          console.log(`Downloaded ${e.loaded} of ${e.total} bytes`);
+        };
+
+        xhr.onerror = () => {
+          console.log(
+            "this was triggered by the onerror event and is therefore a network error",
+          );
+        };
+
+        xhr.onload = () => {
+          // console.log("DONE", xhr.readyState);
+          // console.log(xhr);
+          if (xhr.status === 200) {
+            document.write(
+              "You have been successful, and here is your secret message: ",
+              xhr.responseText,
+            );
+          } else {
+            if (xhr.status === 404) {
+              document.write("Oops, that file does not exist");
+            }
+          }
+        };
+
+        // xhr.onreadystatechange = () => {
+        //   // console.log(xhr.readyState);
+        //   if (xhr.readyState === 4) {
+        //     if (xhr.status === 200) {
+        //       document.write(
+        //         "You have been successful, and here is your secret message: ",
+        //         xhr.responseText,
+        //       );
+        //     } else {
+        //       if (xhr.status === 404) {
+        //         document.write("Oops, that file does not exist");
+        //       }
+        //     }
+        //   } else {
+        //   }
+        // };
+
+        // Step 4
+        xhr.send();
+      });
+    </script>
+  </body>
+</html>
