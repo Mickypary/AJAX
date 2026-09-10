@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX POST REQUEST</title>
+  </head>
+  <body>
+    <form id="mainForm">
+      <label for="username">Username:</label>
+      <div><input type="text" name="username" /></div>
+      <br />
+      <label for="comment">Comment:</label>
+      <div><textarea name="comment"></textarea></div>
+      <p><button onclick="postComment(event)">Post Comment</button></p>
+    </form>
+    <div id="result">
+      <p>Content of this DIV box will be replaced by the server response</p>
+    </div>
+
+    <script>
+      function postComment(e) {
+        e.preventDefault();
+        let xhr = new XMLHttpRequest();
+        let method = "POST";
+        let url = "/submitting_a_PHP_POST_request/message.php";
+        xhr.open(method, url);
+        // xhr.onreadystatechange = () => {
+        //   if (xhr.readyState === 4) {
+        //     console.log("Done");
+        //   }
+        // };
+        // modern compared to the xhr.onreadystatechange
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            document.getElementById("result").innerHTML = xhr.response;
+          }
+        };
+        let myForm = document.getElementById("mainForm");
+        let usersData = new FormData(myForm);
+        xhr.send(usersData);
+      }
+    </script>
+  </body>
+</html>
