@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let url = "https://icanhazdadjoke.com/";
+
+      async function fetchData(location) {
+        let res = await fetch(location);
+        const reader = res.body
+          .pipeThrough(new TextDecoderStream())
+          .getReader();
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          console.log("chunks received: ", value);
+        }
+
+        console.log("yippeeeeee, response has been received");
+      }
+
+      fetchData(url);
+    </script>
+  </body>
+</html>
