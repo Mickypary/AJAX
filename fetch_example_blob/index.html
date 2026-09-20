@@ -49,6 +49,14 @@
         }
       }
 
+      function convertToBlob(response) {
+        return response.blob();
+      }
+
+      function convertToJson(response) {
+        return response.json();
+      }
+
       // **************************** FETCHING JOKES
 
       let url = "https://icanhazdadjoke.com/";
@@ -62,13 +70,24 @@
         headers: h,
       });
 
-      fetch(req)
-        .then(checkStatus)
-        .then((res) => res.json())
-        .then((data) => {
-          document.getElementById("iptext").innerHTML = data.joke;
-        })
-        .catch((err) => console.log("Oops, there was a network error"));
+      // using then
+      // fetch(req)
+      //   .then(checkStatus)
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     document.getElementById("iptext").innerHTML = data.joke;
+      //   })
+      //   .catch((err) => console.log("Oops, there was a network error"));
+
+      // Using async await
+      async function randomJoke() {
+        let response = await fetch(req);
+        let goodResponse = await checkStatus(response);
+        let data = await convertToJson(goodResponse);
+        document.getElementById("iptext").innerHTML = data.joke;
+      }
+
+      randomJoke();
 
       // **************************** FETCHING THE IMAGE
       let btn = document.getElementById("btn");
@@ -80,18 +99,37 @@
         let req = new Request(imageURL, {
           headers: h,
         });
-        fetch(req)
-          .then(checkStatus)
-          .then((res) => {
-            return res.blob();
-          })
-          .then((blob) => {
-            let pictureURL = URL.createObjectURL(blob);
+
+        // fetch using then
+        // fetch(req)
+        //   .then(checkStatus)
+        //   .then((res) => {
+        //     return res.blob();
+        //   })
+        //   .then((blob) => {
+        //     let pictureURL = URL.createObjectURL(blob);
+        //     imgEl.src = pictureURL;
+        //     // imgEl.width = "1000";
+        //     console.log("SUCCESS");
+        //   })
+        //   .catch((err) => console.log("NOW this will catch all errors: ", err));
+
+        // fetch using async await
+        async function fetchImage() {
+          try {
+            let response = await fetch(req);
+            let goodResponse = await checkStatus(response);
+            let blobData = await convertToBlob(goodResponse);
+            let pictureURL = URL.createObjectURL(blobData);
             imgEl.src = pictureURL;
             // imgEl.width = "1000";
             console.log("SUCCESS");
-          })
-          .catch((err) => console.log("NOW this will catch all errors: ", err));
+          } catch (e) {
+            console.log("hello world, oops ", e);
+          }
+        }
+
+        fetchImage();
       });
 
       // How you would implement thumbnail display for file input element using URL Interface
